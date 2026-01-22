@@ -1,0 +1,23 @@
+{
+  "name": "ridesharingbc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GregoriusPatrick/RidesharingBC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GregoriusPatrick/RidesharingBC/issues"
+  },
+  "homepage": "https://github.com/GregoriusPatrick/RidesharingBC#readme",
+  "dependencies": {
+    "web3": "^4.16.0"
+  }
+}

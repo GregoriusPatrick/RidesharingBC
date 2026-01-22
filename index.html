@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EtherRide - Decentralized Ride Sharing</title>
+    <!-- Modern Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <h1><i class="ri-taxi-wifi-fill"></i> EtherRide</h1>
+            <p>Platform Ride Sharing Terdesentralisasi dengan Smart Contract</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Connection Status -->
+        <div class="card">
+            <h2><i class="ri-plug-line"></i> Koneksi Wallet</h2>
+            <div class="connection-status">
+                <div class="status-info">
+                    <span class="status-indicator disconnected" id="statusIcon">
+                        <i class="ri-checkbox-blank-circle-fill"></i> <span id="status">Belum Terkoneksi</span>
+                    </span>
+                </div>
+                <div class="account-info">
+                    Account: <span id="account" class="account-badge">-</span>
+                </div>
+            </div>
+            <button onclick="connectWallet()">
+                <i class="ri-metamask-fill"></i> Hubungkan MetaMask
+            </button>
+        </div>
+
+        <!-- Driver Registration -->
+        <div class="card">
+            <h2><i class="ri-steering-2-line"></i> Registrasi Pengemudi</h2>
+            <div class="form-grid">
+                <input type="text" id="regName" placeholder="Nama Lengkap">
+                <input type="text" id="regVehicleName" placeholder="Nama Kendaraan (ex: Toyota Avanza)">
+                <input type="text" id="regPlate" placeholder="Plat Nomor (ex: B 1234 XY)">
+                <input type="text" id="regVehicleType" placeholder="Tipe (ex: Minibus/Sedan)">
+                <div class="form-group full-width">
+                    <input type="number" id="regRate" placeholder="Tarif per KM (Wei)">
+                </div>
+            </div>
+            <button onclick="registerDriver()"><i class="ri-user-add-line"></i> Daftar Jadi Driver</button>
+
+            <h3><i class="ri-team-line"></i> Daftar Pengemudi Aktif</h3>
+            <div class="table-container">
+                <table id="driverTable">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kendaraan</th>
+                            <th>Plat</th>
+                            <th>Tipe</th>
+                            <th>Wallet Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:#94a3b8;">Belum ada data loaded...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Booking Section -->
+        <div class="card">
+            <h2><i class="ri-map-pin-user-line"></i> Pesan Perjalanan</h2>
+            <div class="form-grid">
+                <input type="text" id="pickup" placeholder="📍 Lokasi Jemput">
+                <input type="text" id="destination" placeholder="🏁 Tujuan">
+                <input type="number" id="price" placeholder="💰 Harga Penawaran (ETH)">
+                <input type="text" id="notes" placeholder="📝 Catatan (Opsional)">
+            </div>
+            <button onclick="requestRide()"><i class="ri-rocket-line"></i> Buat Pesanan</button>
+        </div>
+
+        <!-- Orders & Actions -->
+        <div class="card">
+            <h2><i class="ri-list-check-2"></i> Manajemen Pesanan</h2>
+
+            <div class="actions-container">
+                <label><strong><i class="ri-cursor-fill"></i> Pilih ID Ride untuk Aksi:</strong></label>
+                <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
+                    <input type="number" id="actionRideId" placeholder="ID..." style="width: 100px; margin:0;">
+                    <span style="font-size:0.9em; color:#64748b;">Masukkan ID dari tabel di bawah</span>
+                </div>
+
+                <div class="action-buttons-grid">
+                    <button class="action-btn" onclick="acceptRide()"><i class="ri-check-double-line"></i> 1. [Driver]
+                        Terima</button>
+                    <button class="action-btn" onclick="fundRide()"><i class="ri-secure-payment-line"></i> 2. [User]
+                        Bayar Escrow</button>
+                    <button class="action-btn" onclick="startRide()"><i class="ri-e-bike-2-line"></i> 3. [Driver]
+                        Mulai</button>
+                    <button class="action-btn" onclick="completeRide()"><i class="ri-flag-2-line"></i> 4. [Driver]
+                        Selesai</button>
+                    <button class="action-btn" onclick="confirmArrival()"><i class="ri-thumb-up-line"></i> 5. [User]
+                        Konfirmasi</button>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Status Terkini</h3>
+                <button onclick="loadEvents()" class="refresh-btn"><i class="ri-refresh-line"></i> Refresh Data</button>
+            </div>
+
+            <div class="table-container">
+                <table id="rideTable">
+                    <thead>
+                        <tr>
+                            <th style="width:50px;">ID</th>
+                            <th>Rute & Catatan</th>
+                            <th>Driver</th>
+                            <th>Status</th>
+                            <th>Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:#94a3b8;">Klik Refresh untuk memuat data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
