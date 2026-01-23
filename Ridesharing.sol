@@ -42,7 +42,7 @@ contract RideSharing {
         _;
     }
 
-    // --- BAGIAN A: Data Pengemudi [cite: 55] ---
+    // Data Pengemudi
 
     //Mendaftarkan pengemudi baru ke sistem
     function registerDriver(string memory _name, string memory _licensePlate, string memory _vehicleType, string memory _vehicleName, uint256 _rate) public {
@@ -66,7 +66,7 @@ contract RideSharing {
         return drivers[_driverAddress];
     }
 
-    // --- BAGIAN B & C: Pemesanan & Aturan Dana [cite: 58, 71] ---
+    // Pemesanan & Aturan Dana
 
     //Penumpang membuat pesanan perjalanan
     function requestRide(string memory _pickup, string memory _destination, uint256 _price, string memory _notes) public {

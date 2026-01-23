@@ -1,11 +1,8 @@
-// --- 1. KONFIGURASI KONTRAK ---
 
 
 
-// GANTI DENGAN ALAMAT KONTRAK YANG SUDAH DI-DEPLOY KE SEPOLIA
 const CONTRACT_ADDRESS = "0x37CB3739eae3c24D5C1bD5d062bb875E2414b3dc";
 
-// ABI FINAL (Sesuai dengan penambahan vehicleName & passengerNotes)
 const CONTRACT_ABI = [
     {
         "inputs": [
@@ -381,13 +378,13 @@ const CONTRACT_ABI = [
     }
 ];
 
-// --- 2. VARIABEL GLOBAL ---
+
 let web3;
 let contract;
 let userAccount;
 const STATUS_LABELS = ["Requested", "Accepted", "Funded", "Started", "Completed", "Finalized", "Cancelled"];
 
-// --- 3. FUNGSI UTAMA ---
+// FUNGSI UTAMA 
 
 async function connectWallet() {
     if (window.ethereum) {
@@ -452,8 +449,7 @@ async function requestRide() {
     } catch (err) { alert("Error: " + err.message); }
 }
 
-// --- 4. FUNGSI AKSI (Driver & User) ---
-// Sama seperti sebelumnya, tidak ada perubahan logika di sini
+// FUNGSI ACTION
 async function acceptRide() {
     const id = document.getElementById("actionRideId").value;
     if (!id) return;
@@ -492,21 +488,18 @@ async function confirmArrival() {
     catch (e) { alert(e.message); }
 }
 
-// --- 5. LOAD DATA KE TABEL ---
+// LOAD DATA KE TABLE
 async function loadEvents() {
     if (!contract) {
         return alert("Harap hubungkan wallet (Metamask) terlebih dahulu sebelum mengambil data!");
     }
 
-    // A. Load List Driver
     const events = await contract.getPastEvents("DriverRegistered", { fromBlock: 0, toBlock: 'latest' });
     const driverBody = document.getElementById("driverTable").querySelector("tbody");
     driverBody.innerHTML = "";
 
-    // Set untuk menghindari duplikasi display jika driver daftar ulang (opsional logic)
     const processedDrivers = new Set();
 
-    // Loop terbalik agar yang baru daftar muncul di atas
     for (let i = events.length - 1; i >= 0; i--) {
         const evt = events[i];
         const addr = evt.returnValues.driver;
@@ -526,7 +519,6 @@ async function loadEvents() {
         }
     }
 
-    // B. Load List Rides
     const counter = await contract.methods.rideCounter().call();
     const rideBody = document.getElementById("rideTable").querySelector("tbody");
     rideBody.innerHTML = "";
@@ -536,7 +528,6 @@ async function loadEvents() {
         const priceEth = web3.utils.fromWei(ride.price, "ether");
         const statusLabel = STATUS_LABELS[ride.status];
 
-        // Tampilkan Notes jika ada
         let routeInfo = `<b>${ride.pickupLocation}</b> ➝ <b>${ride.destination}</b>`;
         if (ride.passengerNotes) {
             routeInfo += `<br><small>📝 Note: ${ride.passengerNotes}</small>`;
